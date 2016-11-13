@@ -1,21 +1,10 @@
----
-title: "Reproducible Research : Course Project 1"
-output: html_document
----
-### jordiac, November 2016
 
-
-
-## Loading and Processing the data
-
-First we load the library needed to plot results: 
-```{r, include=TRUE, echo=TRUE }
+## *****  Loading libraries ********
 library(ggplot2)
-```
 
 
-Then we load the data:
-```{r, include=TRUE, echo=TRUE }
+
+
 ## ********  1) Checking if file exists in our wd *************
 name1 <- "activity.csv"
 lname <- c(name1)
@@ -31,99 +20,87 @@ if (verif1[1] == TRUE ){
 }
 ##----------------------------------------------------------
 
+
+
 ##***********  2) Reading the file *************************
 dades <- read.table(file= name1 , header=TRUE, sep=",")
 ##----------------------------------------------------------
-```
 
 
 
-## What is mean total number of steps taken per day?
+##**** 3) What is mean total number of steps taken per day *****
 
-```{r, include=TRUE, echo=TRUE }
 ### Calculate the total number of steps taken per day
 sumstep <- aggregate(steps~date, dades, sum, na.rm=TRUE)
-head(sumstep)
 
 ### histogram of the total number of steps taken each day
+png("plot1.png", width=1000, height=600)
 g <- ggplot(sumstep, aes(steps))
 g + geom_histogram(color="blue", fill="cyan",binwidth = 1000) +
         labs(title="Total number of steps taken each day")
-
+dev.off()
 
 ### mean and median of the total number of steps taken per day
 mean1 <- mean(sumstep$steps)
-mean1 <- format(mean1, scientific=FALSE)
-mean1
-
 median1 <- median(sumstep$steps)
-median1
 ##-----------------------------------------------------------------
-```
-So the mean and median of the total number of steps taken per day are `r mean1` and `r median1`.
 
 
-## What is the average daily activity pattern?
-```{r, include=TRUE, echo=TRUE }
+
+##******** 4) What is the average daily activity pattern  *********
+
+###  time series plot  of the 5-minute interval and 
+###  the average number of steps taken (averaged)
+
 #### subsetting data
 sub2 <- aggregate(steps~interval, dades, mean, na.rm=TRUE)   
 
 #### plotting
+png("plot2.png", width=1000, height=1000)
 g <- ggplot(sub2, aes(x=interval, y=steps))
 g + geom_line(color="blue",size=1) +
-        labs(title="Average number of steps taken by 5min interval")
-
+        labs(title="Average number of steps taken by 5min interval")+
+        theme(plot.title= element_text(size=30))+
+        theme(axis.title.x = element_text(size=22), axis.text.x=element_text(size=16))+
+        theme(axis.title.y = element_text(size=22), axis.text.y=element_text(size=16))
+dev.off()
 
 #### 5 minute interval containing the max. number of steps
 maxaver <- max(sub2$steps)
-maxaver
-
 maxint <- subset(sub2, steps==maxaver)$interval
-maxint
 ##-----------------------------------------------------------------
 
-```
-So the maximum number of steps is `r maxaver` which is in interval `r maxint`.
 
 
-## Imputing missing values
+##************ 5) imputing missing values  ****************
 
-```{r, include=TRUE, echo=TRUE }
 ###  Calculate the number of NA values 
 nalist <- is.na(dades$steps)
+
 
 ### Filling NA values: using the average for the interval and creating new data set
 step2 <- replace(dades$steps, nalist, sub2$steps[match(dades$interval[nalist],sub2$interval)])
 dades2 <- dades
 dades2$steps <- step2
 
+
 ### histogram of the total number of steps taken each day with //modified data set//
 sumstep2 <-aggregate(steps~date, dades2, sum)
+png("plot3.png", width=1000, height=600)
 g <- ggplot(sumstep2, aes(x=steps))
 g + geom_histogram(color="red", fill="orange", binwidth = 1000) +
         labs(title="Total number of steps taken each day //modified//")
+dev.off()
+
 
 ### mean and median of the total number of steps taken per day //modified data set//
 mean2 <- mean(sumstep2$steps)
-mean2 <- format(mean2, scientific=FALSE)
-mean2
-
-
 median2 <- median(sumstep2$steps)
-median2 <- format(median2, scientific=FALSE)
-median2
 ##-----------------------------------------------------------------------------------
-```
-
-So the mean and median of the total number of steps taken per day are  `r mean2`  and  `r median2`  for the modified data set (including NA values).
-
-These values differ from the estimates in the first part of this assignment. 
-
-The main impact of imputing missing data (using the average of the interval) on the estimates of the total daily number of steps, is that median is equal to the mean : `r mean2`.
 
 
-## Are there differences in activity patterns between weekdays and weekends?
-```{r, include=TRUE, echo=TRUE }
+
+##***** 6) Are there differences in activity patterns between weekdays and weekends? ************
 
 ### Setting weekdays in English
 Sys.setlocale("LC_TIME", "English")
@@ -142,15 +119,13 @@ dades2$weekType <- weeklist[match(dades2$weekday, weeklist[,1]) ,2]
 
 #### creating subset with average of steps by interval & plotting
 sub3 <- aggregate(steps~interval+weekType, dades2, mean)
-
+png("plot4.png", width=600, height=600)
 g <- ggplot(sub3, aes(x=interval, y=steps))+ facet_grid(weekType~.)
 g + geom_line(aes(color=weekType), size=1) +
-        labs(title="Average number of steps taken by 5min interval")
+        labs(title="Average number of steps taken by 5min interval")+
+        theme(plot.title= element_text(size=20))+
+        theme(axis.title.x = element_text(size=15), axis.text.x=element_text(size=11))+
+        theme(axis.title.y = element_text(size=15), axis.text.y=element_text(size=11))
+dev.off()
 ##-----------------------------------------------------------------------------------
-```
-During weekdays the test object is more active early in the morning and then decreases probably because it's work time. However during weekends, the test object has a more constant activity.
 
-```{r, include=TRUE, echo=TRUE }
-
-### *********  End of Markdown file  **********
-```
