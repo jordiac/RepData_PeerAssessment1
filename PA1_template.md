@@ -72,8 +72,7 @@ g <- ggplot(sumstep, aes(steps))
 g + geom_histogram(color="blue", fill="cyan",binwidth = 1000) +
         labs(title="Total number of steps taken each day")
 ```
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+![](RepData_PeerAssessment1/figure/plot1.png)
 
 ```r
 ### mean and median of the total number of steps taken per day
