@@ -112,7 +112,7 @@ g + geom_line(color="blue",size=1) +
         labs(title="Average number of steps taken by 5min interval")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
+![](figure/plot2.png)
 
 ```r
 #### 5 minute interval containing the max. number of steps
@@ -158,7 +158,7 @@ g + geom_histogram(color="red", fill="orange", binwidth = 1000) +
         labs(title="Total number of steps taken each day //modified//")
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
+![](figure/plot3.png)
 
 ```r
 ### mean and median of the total number of steps taken per day //modified data set//
@@ -224,7 +224,7 @@ g + geom_line(aes(color=weekType), size=1) +
         labs(title="Average number of steps taken by 5min interval")
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png)
+![](figure/plot4.png)
 
 ```r
 ##-----------------------------------------------------------------------------------
